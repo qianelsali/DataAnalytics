@@ -1,5 +1,5 @@
 # DataAnalytics
-DataAnlaytcis Cheatsheet
+Data Analytics Cheatsheet
 
 #### preprocessing 
 Funcitons frequently used for data imputations
