@@ -1,8 +1,8 @@
 # DataAnalytics
 DataAnlaytcis Cheatsheet
 
-# preprocessing 
+#### preprocessing 
 Funcitons frequently used for data imputations
 
-# visulization 
+#### visulization 
 Funcitons frequently used for data visualization
