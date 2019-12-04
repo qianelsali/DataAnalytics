@@ -1,3 +1,5 @@
+## pipeline for data preprocessing
+
 def checkMissingValues(df):
     summary = pd.DataFrame({'Valid(count)':df.count(),
                             'Missing(count)':df.isna().sum(),
