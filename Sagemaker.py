@@ -1,7 +1,9 @@
 # AWS sagemaker connect to S3 bucket data 
 import boto3
 
+#https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-api.html
 def useTempCredential():
+  
   sts_client = boto3.client('sts')
   assumed_role_object=sts_client.assume_role(
       RoleArn="arn:aws:iam::account-of-role-to-assume:role/name-of-role",
@@ -17,7 +19,7 @@ def useTempCredential():
   for bucket in s3_resource.buckets.all():
       print(bucket.name)
       
-      
+ #directly read data from S3
 def readDataFromS3(bucketName=BUCKET, 
                    filePath=DEFAULTFILE, 
                    nrows=10000):
