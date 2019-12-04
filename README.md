@@ -4,5 +4,5 @@ DataAnlaytcis Cheatsheet
 #### preprocessing 
 Funcitons frequently used for data imputations
 
-#### visulization 
+#### visualization
 Funcitons frequently used for data visualization
