@@ -21,16 +21,16 @@ Data Analytics toolket for making a comprehensive data analytics product
 
 ### 4) MAKE API
 #### testAPIRequest.py
-`Functions to test APIs using post methods. `
+`Functions to test APIs using post methods. `<br /> 
 `Two types of request data format are included (i.e., XML, JSON requsts)`
 
 
 ### 5) AUTOMATION OF DEPLOYMENT
 #### CREATE VIRTUAL ENVIRONMENT WHEN CREATING THE PROJECT
 ###### Create python virtual env
-####`pip install virtualenv`
-####`virtualenv carsapp`
-####`myenv\Scripts\activate`
+####`pip install virtualenv`<br /> 
+####`virtualenv carsapp`<br /> 
+####`myenv\Scripts\activate`<br /> 
 
 ###### Save python depedencies
 ####`pip freeze - requirements.txt`
