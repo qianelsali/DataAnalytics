@@ -26,7 +26,17 @@ Data Analytics toolket for making a comprehensive data analytics product
 
 
 ### 5) AUTOMATION OF DEPLOYMENT
+#### CREATE VIRTUAL ENVIRONMENT WHEN CREATING THE PROJECT
+# Create python virtual env
+####`pip install virtualenv`
+####`virtualenv carsapp`
+####`myenv\Scripts\activate`
 
+# Save python depedencies
+####`pip freeze - requirements.txt`
+
+# install python dependencies
+####`pip install -r requirements.txt`
 
 
 ### 6) MAINTAINANCE 
