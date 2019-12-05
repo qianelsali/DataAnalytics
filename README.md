@@ -38,6 +38,13 @@ Data Analytics toolket for making a comprehensive data analytics product
 ###### install python dependencies
 ####`pip install -r requirements.txt`
 
+#### DEPLOYMENT TO AWS EC2 INSTANCE
+`Chmod 400 cars-recommendation-test.pem `
+`Ssh -i cars-recommendation-test.pem ubuntu@<EC2_IP_ADDRESS> `
+`Sudo docker build -t <DOCKER_IMAGE> .`
+`Sudo docker run -p 5000:5000 -t <DOCKER_IMAGE>`
+`docker run -d -p 5000:5000 --name <DOCKER_IMAGE> <DOCKER_IMAGE>:latest`
+
 
 ### 6) MAINTAINANCE 
 
