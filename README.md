@@ -4,9 +4,9 @@ Data Analytics toolket for making a comprehensive data analytics product
 ### 1) CONNECT TO DATA
 #### sagemakerConnect.py
 `Using AWS sagemaker to conduct data analysis and machine learning.`
-`This file include functions of connecting data in S3 Bucket from Sagemaker.`
-`So far, AWS provides so many tool sets for big data analytics and machine learning. `
-`AWS Sagemaker is a powerful and easy-to-use service for machine learning. `
+`This file include functions of connecting data in S3 Bucket from Sagemaker.` 
+`So far, AWS provides so many tool sets for big data analytics and machine learning. ` 
+`AWS Sagemaker is a powerful and easy-to-use service for machine learning. ` 
 `Strong recommendation to check out AWS Sagemaker if you are struggling which platform to use for machine learning! `
 
 ### 2) CONSUME DATA & MODELING/MACHINE LEARNING
@@ -21,8 +21,8 @@ Data Analytics toolket for making a comprehensive data analytics product
 
 ### 4) MAKE API
 #### testAPIRequest.py
-`Functions to test APIs using post methods.
-Two types of request data format are included (i.e., XML, JSON requsts)`
+`Functions to test APIs using post methods. `
+`Two types of request data format are included (i.e., XML, JSON requsts)`
 
 
 ### 5) AUTOMATION OF DEPLOYMENT
