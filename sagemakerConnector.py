@@ -2,8 +2,7 @@
 import boto3
 
 #https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-api.html
-def useTempCredential():
-  
+def useTempCredential():  
   sts_client = boto3.client('sts')
   assumed_role_object=sts_client.assume_role(
       RoleArn="arn:aws:iam::account-of-role-to-assume:role/name-of-role",
