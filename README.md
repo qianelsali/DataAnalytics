@@ -7,7 +7,7 @@ Data Analytics toolket for making a comprehensive data analytics product
 ###### This file include functions of connecting data in S3 Bucket from Sagemaker. <br /> 
 ###### So far, AWS provides so many tool sets for big data analytics and machine learning.  <br /> 
 ###### AWS Sagemaker is a powerful and easy-to-use service for machine learning.  <br /> 
-###### Strong recommendation to check out AWS Sagemaker if you are struggling which platform to use for machine learning! <br /> 
+###### Strong recommendation to check out AWS Sagemaker if you are struggling of which platform to use for machine learning! <br /> 
 
 ### 2) CONSUME DATA & MODELING/MACHINE LEARNING
 #### preprocessing.py
