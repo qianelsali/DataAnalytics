@@ -1,4 +1,4 @@
-from snowflake_connector import snowflake_connector
+from snowflakeConnector import snowflake_connector
 import pickle
 import os, traceback
 
