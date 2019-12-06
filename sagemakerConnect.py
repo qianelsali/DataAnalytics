@@ -19,7 +19,7 @@ def useTempCredential():
   for bucket in s3_resource.buckets.all():
       print(bucket.name)
       
- #directly read data from S3
+#directly read data from S3
 def readDataFromS3(bucketName=BUCKET, 
                    filePath=DEFAULTFILE, 
                    nrows=10000):
