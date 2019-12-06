@@ -1,0 +1,72 @@
+node {
+
+    stage('Preparation') { // for display purposes
+        // Get some code from a GitHub repository
+        // git [url:'https://ADDRESS', credentialsId:'credentialsId']
+        //   cleanWs()
+        // this is a test comment delete after
+        git url: 'https://ADDRESS', credentialsId: 'credentialsId', branch: 'dev'
+    }
+    
+      stage('BuildContainer'){
+        
+         sh 'docker build -t <DOCKER_IMAGE> .'
+         
+      }
+      
+      stage('PushCarsAppECR') {
+      
+        sh '''
+        pwd
+        $(aws ecr get-login --no-include-email --region us-west-2)
+        docker tag cars:latest <99999999999>.dkr.ecr.us-west-2.amazonaws.com/<DOCKER_IMAGE>:latest
+        docker push <99999999999>.dkr.ecr.us-west-2.amazonaws.com/<DOCKER_IMAGE>:latest  
+       
+        '''
+      }
+      
+      
+      stage ('PullDownFromECRRemoteServer') {
+        sh '''
+        ssh ubuntu@EC2_ip <<EOF
+        date
+        hostname
+        pwd
+        whoami
+        sudo $(aws ecr get-login --no-include-email --region us-west-2)
+
+        sudo docker pull <99999999999>.dkr.ecr.us-west-2.amazonaws.com/<DOCKER_IMAGE>:latest  
+        
+        '''
+        
+        }
+        
+        stage ('DeployNewContainer') {
+        
+        sh '''
+        ssh ubuntu@10.248.59.111 <<EOF
+        sudo docker stop <DOCKER_IMAGE>
+        sudo docker rm <DOCKER_IMAGE>
+        sudo docker run -d -p 5000:5000 --name cars <99999999999>.dkr.ecr.us-west-2.amazonaws.com/<DOCKER_IMAGE>:latest 
+        '''
+        
+        }
+
+        stage ('runDatabaseSchedule') {
+          echo "Running the database schedule"
+          pwd
+          sh 'python3.6 ./autoUpdateDB.py'
+        }
+        
+      
+      
+
+      stage('DeploymentNotification') {
+      
+          sh 'aws sns publish --topic-arn "arn:aws:sns:us-west-2:<99999999999>:<DOCKER_IMAGE>-notification" --message "Hello, the dev API has been deployed again on http://address/"'
+      }
+      
+  
+    
+  
+}   

@@ -1,0 +1,68 @@
+node {
+
+    stage('Preparation') { // for display purposes
+        // Get some code from a GitHub repository
+        // git [url:'https://address', credentialsId: <credentialsId>]
+        //   cleanWs()
+        // this is a test comment delete after
+        git url: 'https://address', credentialsId: <credentialsId>, branch: <BranchName>
+    }
+      
+
+    
+      stage('BuildContainer'){
+         sh 'pwd'
+         sh 'docker build -t <devAPI> .'
+         
+         
+      }
+      
+      stage('PushCarsAppECR') {
+      
+        sh '''
+        pwd
+        $(aws ecr get-login --no-include-email --region us-west-2)
+        docker tag <devAPI>:latest <900000000000>.dkr.ecr.us-west-2.amazonaws.com/<devAPI>:latest
+        docker push <900000000000>.dkr.ecr.us-west-2.amazonaws.com/devcarsapi:latest  
+       
+        '''
+      }
+
+      stage ('try') {
+        sh '''
+        ssh ubuntu@address <<EOF
+        date
+        hostname
+        kubectl get nodes
+        pwd
+        whoami
+        sudo $(aws ecr get-login --no-include-email --region us-west-2)
+
+        sudo docker pull <900000000000>.dkr.ecr.us-west-2.amazonaws.com/<devAPI>:latest
+        kubectl get pods -o wide
+        kubectl scale --replicas=0 deployment cars-deployment
+        kubectl scale --replicas=1 deployment cars-deployment 
+        '''
+        
+      }
+
+      stage ('runAutoSchedule') {
+        echo "Running the database schedule"
+        pwd
+        sh 'python3.6 ./<autoFileName>.py'
+      }        
+
+      stage('DeploymentNotification') {
+      
+          sh 'aws sns publish --topic-arn "arn:aws:sns:us-west-2:<900000000000>:kubernetes-my-api" --message "Hello, api has been updated and deployed in kubernetes eks cluster."'
+      }
+      
+  
+      
+      
+      
+      
+      
+    
+  
+}   
