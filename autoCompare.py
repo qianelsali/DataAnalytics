@@ -1,3 +1,6 @@
+'''
+THIS TOOL IS TO COMPARE STATS OF TWO COLUMNS FROM TWO FILES
+'''
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
@@ -5,10 +8,10 @@ import datetime
 import os
 
 params = {"dataPath": "rawData",
-          "fileA_name": "MTF1.csv", 
-          "fileB_name": "MTF2.csv",
-          "labelA": "MTF1",
-          "labelB": "MTF2",
+          "fileA_name": "fileA.csv", 
+          "fileB_name": "fileB.csv",
+          "labelA": "fileA",
+          "labelB": "fileB",
           "method": "mean",
           "fileA_filterDict": None, 
           "fileB_filterDict": {"H": "Y", "G": "GREEN"},
@@ -17,7 +20,7 @@ params = {"dataPath": "rawData",
           "fileB_sampleIdCol" : ["A"], 
           "fileB_varCol": ["Y"],          
           "figPath": "figs",
-          "dropSampeId": ['19B175.09.22'],
+          "dropSampeId": ['19B175'],
            }
     
 def ImportSourceFile(*args):    
@@ -69,11 +72,11 @@ def ApplyFilter(df, filterDict=None):
             colIx = ConvertCol2Num(col) - 1
             colName = colNames[colIx] 
             if val not in df[colName].unique():
-                print('ALERT: <{}> DOES NOT EXIST IN COLUMN <{}>'.format(val, colName))
+                raise ('ALERT: <{}> DOES NOT EXIST IN COLUMN <{}>'.format(val, colName))
             df = df[df[colName]==val]
     return df
 
-def PivotTableMTF(df=None, sampleIdCol=None, cols=None, method=None):
+def PivotTable(df=None, sampleIdCol=None, cols=None, method=None):
     '''example input: 
         id_col = "A"                      # sample id col
         cols = ["B", "C", "D"]            # cols to be pivoted
@@ -108,13 +111,13 @@ def main():
     df_A_filter = ApplyFilter(df=df_A, filterDict=params["fileA_filterDict"]) 
     df_B_filter = ApplyFilter(df=df_B, filterDict=params["fileB_filterDict"]) 
     
-    tb1 = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
+    tb1 = PivotTable(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
                          cols=params["fileA_varCol"],method=params['method'])
-    tb2 = PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
+    tb2 = PivotTable(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
                          cols=params["fileB_varCol"],method=params['method'])  
-    tb1_std = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
+    tb1_std = PivotTable(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
                              cols=params["fileA_varCol"], method="std")    
-    tb2_std =  PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
+    tb2_std =  PivotTable(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
                              cols=params["fileB_varCol"], method="std")  
 
     [tb1, tb2, tb1_std, tb2_std] = FilterByOverlapSampleId(dfs=[tb1,tb2, tb1_std, tb2_std])
