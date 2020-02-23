@@ -105,40 +105,18 @@ def FilterByOverlapSampleId(dfs=[None]):
 def DropSampleId (df, sampleIdList):
     return df.loc[~df.index.isin(sampleIdList)]
 
-def main():
-    if not os.path.exists(params["figPath"]):
-        os.makedirs(params["figPath"])
-    [df_A, df_B] = ImportSourceFile(params["fileA_name"],params["fileB_name"] )
-    [df_A, df_B] = map(MakeStringCapital,[df_A, df_B])
-    df_A_filter = ApplyFilter(df=df_A, filterDict=params["fileA_filterDict"]) 
-    df_B_filter = ApplyFilter(df=df_B, filterDict=params["fileB_filterDict"]) 
-    
-    tb1 = PivotTable(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
-                         cols=params["fileA_varCol"],method=params['method'])
-    tb2 = PivotTable(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
-                         cols=params["fileB_varCol"],method=params['method'])  
-    tb1_std = PivotTable(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
-                             cols=params["fileA_varCol"], method="std")    
-    tb2_std =  PivotTable(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
-                             cols=params["fileB_varCol"], method="std")  
-
-    [tb1, tb2, tb1_std, tb2_std] = FilterByOverlapSampleId(dfs=[tb1,tb2, tb1_std, tb2_std])
-    lab1, lab2 = params["labelA"], params["labelB"]
-    fileAColName = ConvertCol2Name(df_A, params["fileA_varCol"])[0]
-    fileBColName = ConvertCol2Name(df_B, params["fileB_varCol"])[0]
-    tb1.columns, tb2.columns = [lab1], [lab2]
-    merged = tb1.merge(tb2, left_index=True, right_index=True).sort_values(by=[lab1, lab2])  
-    [merged, tb1_std, tb2_std] = [DropSampleId(df, params["dropSampeId"]) for df in [merged, tb1_std, tb2_std]]
+def plotFigure(merged,tb1_std, tb2_std, fileAColName,fileBColName, lab1, lab2):
     x,y = merged[lab1].values, merged[lab2].values
     slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
-    # plot
     plt.figure(figsize=(10,10))
     plt.style.use('seaborn-poster')
-    plt.scatter(x,y, c='r')
-    plt.plot(x, intercept + slope*x, 'y', label="y={:.4f}x+{:.4f} \n\nR2={:.4f} \n\np={:.4f}".format(slope,intercept,r_value**2,p_value))
+    plt.scatter(x,y,c='r')
+    plt.plot(x, intercept + slope*x, 'y', label="y={:.4f}x+{:.4f} \n\nR2={:.4f} \n\np={:.4f}\n\nNum_samples = {}".format(slope,intercept,r_value**2,p_value,len(x)))
     plt.errorbar(x, y,yerr= tb2_std.values, xerr= tb1_std.values, ecolor = "r", fmt='o')
     plt.xlabel("{} \n {}".format(lab1, fileAColName))
     plt.ylabel("{} \n {}".format(lab2, fileBColName))
+    plt.ylim(-8,4)
+    plt.xlim(-8,4)
     plt.title("{}".format(params["method"].upper()))
     plt.legend(loc=2)
     plt.savefig("{}/{}_{}_{}.jpg".format(params["figPath"],
@@ -146,6 +124,33 @@ def main():
                                          params["method"],
                                          str(datetime.date.today()),
                                         ))
+
+def main():
+    if not os.path.exists(params["figPath"]):
+        os.makedirs(params["figPath"])
+    [df_A, df_B] = ImportSourceFile(params["fileA_name"],params["fileB_name"] )
+    [df_A, df_B] = map(MakeStringCapital,[df_A, df_B])
+    df_A_filter = ApplyFilter(df=df_A, filterDict=params["fileA_filterDict"]) 
+    df_B_filter = ApplyFilter(df=df_B, filterDict=params["fileB_filterDict"])    
+    # get pivot tables
+    tb1 = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
+                         cols=params["fileA_varCol"],method=params['method'])
+    tb2 = PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
+                         cols=params["fileB_varCol"],method=params['method'])  
+    tb1_std = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
+                             cols=params["fileA_varCol"], method="std")    
+    tb2_std =  PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
+                             cols=params["fileB_varCol"], method="std")  
+    # keep shared sample ids
+    [tb1, tb2, tb1_std, tb2_std] = FilterByOverlapSampleId(dfs=[tb1,tb2, tb1_std, tb2_std])
+    fileAColName = ConvertCol2Name(df_A, params["fileA_varCol"])[0]
+    fileBColName = ConvertCol2Name(df_B, params["fileB_varCol"])[0]
+    lab1, lab2 = params["labelA"], params["labelB"]
+    # rename column names
+    tb1.columns, tb2.columns = [lab1], [lab2]
+    merged = tb1.merge(tb2, left_index=True, right_index=True).sort_values(by=[lab1, lab2])  
+    [merged, tb1_std, tb2_std] = [DropSampleId(df, params["dropSampeId"]) for df in [merged, tb1_std, tb2_std]]
+    plotFigure(merged,tb1_std, tb2_std, fileAColName,fileBColName,lab1,lab2)
 
 if __name__ == "__main__":
     main()
