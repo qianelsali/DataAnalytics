@@ -134,10 +134,10 @@ def main():
     df_A_filter = ApplyFilter(df=df_A, filterDict=params["fileA_filterDict"]) 
     df_B_filter = ApplyFilter(df=df_B, filterDict=params["fileB_filterDict"])    
     # get pivot tables
-    tb1 = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"], cols=params["fileA_varCol"],method=params['method'])
-    tb2 = PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],cols=params["fileB_varCol"],method=params['method'])  
-    tb1_std = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"], cols=params["fileA_varCol"], method="std")    
-    tb2_std =  PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],cols=params["fileB_varCol"], method="std")  
+    tb1 = PivotTable(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"], cols=params["fileA_varCol"],method=params['method'])
+    tb2 = PivotTable(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],cols=params["fileB_varCol"],method=params['method'])  
+    tb1_std = PivotTable(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"], cols=params["fileA_varCol"], method="std")    
+    tb2_std =  PivotTable(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],cols=params["fileB_varCol"], method="std")  
     # keep shared sample ids
     [tb1, tb2, tb1_std, tb2_std] = FilterByOverlapSampleId(dfs=[tb1,tb2, tb1_std, tb2_std])
     fileAColName = ConvertCol2Name(df_A, params["fileA_varCol"])[0]
