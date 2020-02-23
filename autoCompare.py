@@ -85,9 +85,9 @@ def PivotTable(df=None, sampleIdCol=None, cols=None, method=None):
         method:  mean, std, min, max, count
     '''
     if not cols:
-        return 'NO COLUMN IS GIVEN.'
+        raise('NO COLUMN IS GIVEN.')
     if not sampleIdCol:
-        return 'SAMPLE ID COLUMN NAME IS NOT GIVEN.'
+        raise('SAMPLE ID COLUMN NAME IS NOT GIVEN.')
     colNames = ConvertCol2Name(df, cols)
     idColName = ConvertCol2Name(df, sampleIdCol)
     tb = df[colNames + idColName].groupby(idColName).agg(method)
@@ -105,7 +105,7 @@ def FilterByOverlapSampleId(dfs=[None]):
 def DropSampleId (df, sampleIdList):
     return df.loc[~df.index.isin(sampleIdList)]
 
-def plotFigure(merged,tb1_std, tb2_std, fileAColName,fileBColName, lab1, lab2):
+def PlotFigure(merged,tb1_std, tb2_std, fileAColName,fileBColName, lab1, lab2):
     x,y = merged[lab1].values, merged[lab2].values
     slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
     plt.figure(figsize=(10,10))
@@ -128,19 +128,16 @@ def plotFigure(merged,tb1_std, tb2_std, fileAColName,fileBColName, lab1, lab2):
 def main():
     if not os.path.exists(params["figPath"]):
         os.makedirs(params["figPath"])
+    # load data and filter
     [df_A, df_B] = ImportSourceFile(params["fileA_name"],params["fileB_name"] )
     [df_A, df_B] = map(MakeStringCapital,[df_A, df_B])
     df_A_filter = ApplyFilter(df=df_A, filterDict=params["fileA_filterDict"]) 
     df_B_filter = ApplyFilter(df=df_B, filterDict=params["fileB_filterDict"])    
     # get pivot tables
-    tb1 = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
-                         cols=params["fileA_varCol"],method=params['method'])
-    tb2 = PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
-                         cols=params["fileB_varCol"],method=params['method'])  
-    tb1_std = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"],
-                             cols=params["fileA_varCol"], method="std")    
-    tb2_std =  PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],
-                             cols=params["fileB_varCol"], method="std")  
+    tb1 = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"], cols=params["fileA_varCol"],method=params['method'])
+    tb2 = PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],cols=params["fileB_varCol"],method=params['method'])  
+    tb1_std = PivotTableMTF(df=df_A_filter,sampleIdCol=params["fileA_sampleIdCol"], cols=params["fileA_varCol"], method="std")    
+    tb2_std =  PivotTableMTF(df=df_B_filter,sampleIdCol=params["fileB_sampleIdCol"],cols=params["fileB_varCol"], method="std")  
     # keep shared sample ids
     [tb1, tb2, tb1_std, tb2_std] = FilterByOverlapSampleId(dfs=[tb1,tb2, tb1_std, tb2_std])
     fileAColName = ConvertCol2Name(df_A, params["fileA_varCol"])[0]
@@ -150,7 +147,8 @@ def main():
     tb1.columns, tb2.columns = [lab1], [lab2]
     merged = tb1.merge(tb2, left_index=True, right_index=True).sort_values(by=[lab1, lab2])  
     [merged, tb1_std, tb2_std] = [DropSampleId(df, params["dropSampeId"]) for df in [merged, tb1_std, tb2_std]]
-    plotFigure(merged,tb1_std, tb2_std, fileAColName,fileBColName,lab1,lab2)
+    # plot
+    PlotFigure(merged,tb1_std, tb2_std, fileAColName,fileBColName,lab1,lab2)
 
 if __name__ == "__main__":
     main()
