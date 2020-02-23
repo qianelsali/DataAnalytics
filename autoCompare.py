@@ -1,5 +1,7 @@
 '''
+Created on Sun Feb 23 14:45:00 2020
 THIS TOOL IS TO COMPARE STATS OF TWO COLUMNS FROM TWO FILES
+@author: qianelsali@gmail.com
 '''
 import pandas as pd
 import matplotlib.pyplot as plt
