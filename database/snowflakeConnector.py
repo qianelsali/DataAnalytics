@@ -47,9 +47,9 @@ class cacheSFTables:
             with open(self.filename, 'wb') as handle:
                 pickle.dump(tableDict, handle)
             if not os.path.exists(self.filename):
-                return "ERROR: picke didn't succesfully save the snowflake data to 'pickleData/tableDict.pickle'."
+                return "ERROR: picke didn't succesfully save the dbdata to {}.".format(self.filename)
         except:
-            return "ERORR: cacheTables() within cacheSFTables.py does not work properly"
+            return "ERORR: cacheTables() does not work properly"
         return "SUCCESSFULLY cached tables into a pickle file '{}'".format(self.filename)
 
 
@@ -68,8 +68,7 @@ class cacheSFTables:
                     "errorCode:": "301", 
                     "errorMsg:": "FileNotFoundError: {} is not found.".format(self.filename)}
       
-
-        
+      
 if __name__ == "__main__":
     cache =  cacheSFTables()
     print(cache.cacheTables())
