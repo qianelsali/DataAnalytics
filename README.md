@@ -1,5 +1,5 @@
 # Data Analytics Toolkit
-Data Analytics toolket for making a comprehensive data analytics product
+Data Analytics toolkit for data analytics product
 
 ### 1) CONNECT TO DATA
 #### sagemakerConnect.py
