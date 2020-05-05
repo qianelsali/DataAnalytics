@@ -1,9 +1,10 @@
 node {
 
-    stage('Preparation') { // for display purposes
+    stage('Preparation') { 
+        // for display purposes
         // Get some code from a GitHub repository
         // git [url:'https://address', credentialsId: <credentialsId>]
-        //   cleanWs()
+        // cleanWs()
         // this is a test comment delete after
         git url: 'https://address', credentialsId: <credentialsId>, branch: <BranchName>
     }
