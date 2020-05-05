@@ -360,7 +360,6 @@ def lambda_handler(event, context):
     TOTAL_RECORDS = 0
     INSERT_SUCCESS = "Insert failed." 
     
-    #set_global_vars()      # Set global variables 
     start = time.time()
     
     # Parsing event for bucket, file name
@@ -372,8 +371,8 @@ def lambda_handler(event, context):
     panda_obj = s3.Object(bkt, obj).get()["Body"]
     
     # Parse and put together the location in S3
-    fldr = os.path.dirname(file_path) #incoming-polk/newregistration/ KW_ManualFiles PB_ManualFiles
-    file = os.path.basename(file_path) #POLK_NEWTRK_12.csv s3://itd-us-west-2-drc-car-guideline/pilottenant21/KW_ManualFiles/KW_ADJUSTER.csv
+    fldr = os.path.dirname(file_path) 
+    file = os.path.basename(file_path) 
     EXTERNAL_FILE = 's3://' + fldr + '/' + file 
     print('Received object: ', EXTERNAL_FILE)
     
@@ -450,17 +449,3 @@ def lambda_handler(event, context):
         con.close()
     finally:
         print("End of Lambda")
-        #Use SNS to send an email notification
-        # end = time.time()
-        # print("Total runtime: ", str(round(end - start, 2)), ' sec.')
-        
-        # sns = boto3.client('sns')
-        # sns.publish(
-        # TopicArn = 'arn:aws:sns:us-west-2:955167096225:CVOD_Notification_Topic',
-        # Subject = 'File uploaded: ' + obj,
-        # Message = INSERT_SUCCESS 
-            # + '\nFile was uploaded from bucket: ' +  bkt 
-            # + '\nFilename : ' + obj
-            # + '\nTotal Record to SF: ' + str(TOTAL_RECORDS)
-            # + '\nTotal Runtime: ' + str(round(end - start, 2))
-        # )
