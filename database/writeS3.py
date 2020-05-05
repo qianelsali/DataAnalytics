@@ -3,8 +3,8 @@ import os
 import time
 
 os.makedirs(os.path.dirname('logs/'), exist_ok=True)
-applog_filename = "logs/app_log.log"
-reclog_filename = "logs/request_rec.txt"
+applog_filename = "applog_filename.log"
+reclog_filename = "reclog_filename.log"
 logging.basicConfig(filename=applog_filename, level=logging.DEBUG)
 BUCKET_NAME = 'application-logs'
 		
