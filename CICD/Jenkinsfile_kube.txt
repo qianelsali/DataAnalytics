@@ -13,18 +13,14 @@ node {
       stage('BuildContainer'){
          sh 'pwd'
          sh 'docker build -t <devAPI> .'
-         
-         
       }
       
-      stage('PushCarsAppECR') {
-      
+      stage('PushAppECR') {
         sh '''
         pwd
         $(aws ecr get-login --no-include-email --region us-west-2)
         docker tag <devAPI>:latest <900000000000>.dkr.ecr.us-west-2.amazonaws.com/<devAPI>:latest
-        docker push <900000000000>.dkr.ecr.us-west-2.amazonaws.com/devcarsapi:latest  
-       
+        docker push <900000000000>.dkr.ecr.us-west-2.amazonaws.com/apiname:latest  
         '''
       }
 
@@ -40,29 +36,26 @@ node {
 
         sudo docker pull <900000000000>.dkr.ecr.us-west-2.amazonaws.com/<devAPI>:latest
         kubectl get pods -o wide
-        kubectl scale --replicas=0 deployment cars-deployment
-        kubectl scale --replicas=1 deployment cars-deployment 
+        kubectl scale --replicas=0 deployment app_deployment
+        kubectl scale --replicas=1 deployment app_deployment 
         '''
-        
       }
 
-      stage ('runAutoSchedule') {
+      stage ('RunModule_1') {
         echo "Running the database schedule"
         pwd
-        sh 'python3.6 ./<autoFileName>.py'
+        sh 'python3.6 ./<Module1_name>.py'
       }        
 
-      stage('DeploymentNotification') {
+      stage ('RunModule_2') {
+        echo "Running the database schedule"
+        pwd
+        sh 'python3.6 ./<Module2_name>.py'
+      }  
       
-          sh 'aws sns publish --topic-arn "arn:aws:sns:us-west-2:<900000000000>:kubernetes-my-api" --message "Hello, api has been updated and deployed in kubernetes eks cluster."'
+      
+      stage('SendNotification') {
+          sh 'aws sns publish --topic-arn "arn:aws:sns:us-west-2:<900000000000>:kubernetes-my-api" --message "APP has been updated and deployed in kubernetes eks cluster."'
       }
-      
-  
-      
-      
-      
-      
-      
-    
   
 }   
