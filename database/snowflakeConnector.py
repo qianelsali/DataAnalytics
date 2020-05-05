@@ -34,8 +34,8 @@ def snowflake_connector(tableLists):
 class cacheSFTables:
     def __init__(self):
         self.path = "pickleData"
-        self.filename = self.path + "/tableDict.pickle"
-        self.tableLists = ["table1"]
+        self.filename = self.path + "pickle_filename.pickle"
+        self.tableLists = ["table1", "table2"]
 
 
     def cacheTables(self):    
@@ -50,11 +50,11 @@ class cacheSFTables:
                 return "ERROR: picke didn't succesfully save the snowflake data to 'pickleData/tableDict.pickle'."
         except:
             return "ERORR: cacheTables() within cacheSFTables.py does not work properly"
-        return "SUCCESSFULLY CACHED SNOWFALKE TABLES INTO A PICKE FILE: '{}'".format(self.filename)
+        return "SUCCESSFULLY cached tables into a pickle file '{}'".format(self.filename)
 
 
     def getTablesFromCache(self):
-        '''ACCESS PICKE FILE CONTAINING ALL TABLES'''
+        '''ACCESS ALL TABLES IN THE PICKLE FILE'''
         try:
             with open(self.filename, 'rb') as handle:
                 tableDict = pickle.load(handle)
@@ -71,12 +71,5 @@ class cacheSFTables:
 
         
 if __name__ == "__main__":
-    # start = time.time()
-    # tableDict = snowflake_connector(tableNameList)
-    # for tablename in tableDict:
-    #     print("{} : , row : {}， col: {}".format(tablename, tableDict[tablename].shape[0], tableDict[tablename].shape[1]))
-    #     print(tableDict[tablename].head(10))
-    # end = time.time()
-    # print("SNOWFALKE CONNECTION TIME(s): {:.2f}".format(end-start))
     cache =  cacheSFTables()
     print(cache.cacheTables())
