@@ -1,17 +1,16 @@
 node {
 
-    stage('Preparation') { // for display purposes
+    stage('Preparation') { 
+        // for display purposes
         // Get some code from a GitHub repository
         // git [url:'https://ADDRESS', credentialsId:'credentialsId']
-        //   cleanWs()
+        // cleanWs()
         // this is a test comment delete after
         git url: 'https://ADDRESS', credentialsId: 'credentialsId', branch: 'dev'
     }
     
       stage('BuildContainer'){
-        
          sh 'docker build -t <DOCKER_IMAGE> .'
-         
       }
       
       stage('PushCarsAppECR') {
@@ -21,7 +20,6 @@ node {
         $(aws ecr get-login --no-include-email --region us-west-2)
         docker tag cars:latest <99999999999>.dkr.ecr.us-west-2.amazonaws.com/<DOCKER_IMAGE>:latest
         docker push <99999999999>.dkr.ecr.us-west-2.amazonaws.com/<DOCKER_IMAGE>:latest  
-       
         '''
       }
       
@@ -34,11 +32,8 @@ node {
         pwd
         whoami
         sudo $(aws ecr get-login --no-include-email --region us-west-2)
-
-        sudo docker pull <99999999999>.dkr.ecr.us-west-2.amazonaws.com/<DOCKER_IMAGE>:latest  
-        
+        sudo docker pull <99999999999>.dkr.ecr.us-west-2.amazonaws.com/<DOCKER_IMAGE>:latest
         '''
-        
         }
         
         stage ('DeployNewContainer') {
@@ -52,21 +47,17 @@ node {
         
         }
 
-        stage ('runDatabaseSchedule') {
+        stage ('RunModule') {
           echo "Running the database schedule"
           pwd
-          sh 'python3.6 ./autoUpdateDB.py'
+          sh 'python3.6 ./ModuleName.py'
         }
         
       
-      
-
       stage('DeploymentNotification') {
       
-          sh 'aws sns publish --topic-arn "arn:aws:sns:us-west-2:<99999999999>:<DOCKER_IMAGE>-notification" --message "Hello, the dev API has been deployed again on http://address/"'
+          sh 'aws sns publish --topic-arn "arn:aws:sns:us-west-2:<99999999999>:<DOCKER_IMAGE>-notification" --message "delivered notification message"'
       }
-      
-  
     
   
 }   
